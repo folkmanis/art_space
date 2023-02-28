@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Art Space</string>
+    <string name="button_previous">Previous</string>
+    <string name="button_next">Next</string>
+    <string name="title_1">Somewhere at Lansarote. White building with blue doors ar windowshades</string>
+    <string name="author_1">Some Photographer</string>
+    <string name="year_1">2023</string>
+</resources>
