@@ -3,6 +3,8 @@ package com.example.artspace
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -10,7 +12,7 @@ import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -35,7 +37,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    ArtSpaceScreen()
+                    ArtSpaceApp()
                 }
             }
         }
@@ -43,89 +45,163 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun ArtSpaceScreen() {
+fun ArtSpaceApp() {
+
+    var currentImage by remember {
+        mutableStateOf(1)
+    }
+
+    when (currentImage) {
+        1 -> ArtSpaceScreen(
+            image = R.drawable.image_1,
+            title = R.string.title_1,
+            author = R.string.author_1,
+            year = R.string.year_1,
+            onPreviousImage = { currentImage = 3 },
+            onNextImage = { currentImage = 2 }
+        )
+        2 -> ArtSpaceScreen(
+            image = R.drawable.image_2,
+            title = R.string.title_2,
+            author = R.string.author_2,
+            year = R.string.year_2,
+            onPreviousImage = { currentImage = 1 },
+            onNextImage = { currentImage = 3 }
+        )
+        3 -> ArtSpaceScreen(
+            image = R.drawable.image_3,
+            title = R.string.title_3,
+            author = R.string.author_3,
+            year = R.string.year_3,
+            onPreviousImage = { currentImage = 2 },
+            onNextImage = { currentImage = 1 }
+        )
+    }
+
+}
+
+@Composable
+fun ArtSpaceScreen(
+    @DrawableRes image: Int,
+    @StringRes title: Int,
+    @StringRes author: Int,
+    @StringRes year: Int,
+    onPreviousImage: () -> Unit,
+    onNextImage: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     Column(
         modifier = Modifier
-            .fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally
+            .fillMaxHeight(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.SpaceBetween
     ) {
-        Surface(
-            elevation = 2.dp,
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth()
-                .border(width = 2.dp, color = Color.Gray)
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.image_1),
-                contentDescription = null,
-                modifier = Modifier
-                    .padding(36.dp)
-            )
-        }
-        Surface(
-            elevation = 2.dp,
-            modifier = Modifier
-                .padding(horizontal = 16.dp)
-                .fillMaxWidth()
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = modifier
+                .weight(1f)
+                .padding(16.dp),
         ) {
             Column(
-                horizontalAlignment = Alignment.Start,
+                horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
-                    .padding(8.dp)
+                    .weight(1f)
             ) {
-                Text(
-                    text = stringResource(id = R.string.title_1),
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Light
-                )
-                Text(
-                    text = buildAnnotatedString {
-                        withStyle(
-                            style = SpanStyle(fontWeight = FontWeight.Bold)
-                        ) {
-                            append(stringResource(id = R.string.author_1))
-                        }
-                        append(" (")
-                        append(stringResource(id = R.string.year_1))
-                        append(")")
-                    },
-                    fontSize = 12.sp,
-                )
+                Surface(
+                    elevation = 2.dp,
+                    modifier = Modifier
+                        .border(width = 2.dp, color = Color.Gray)
+                        .weight(1f, fill = false)
+                ) {
+                    Image(
+                        painter = painterResource(id = image),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .padding(36.dp)
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(32.dp))
+
+                Surface(
+                    elevation = 2.dp,
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                ) {
+                    ImageAnnotation(
+                        title, author, year
+                    )
+                }
+
             }
         }
 
         Row(
             verticalAlignment = Alignment.Bottom,
             horizontalArrangement = Arrangement.SpaceEvenly,
-            modifier = Modifier
-                .fillMaxHeight()
-                .padding(8.dp),
+            modifier = modifier
+                .padding(8.dp)
         ) {
             Button(
-                onClick = { /*TODO*/ },
-                modifier = Modifier
+                onClick = onPreviousImage,
+                modifier = modifier
                     .weight(1.0f)
                     .padding(8.dp)
             ) {
                 Text(text = stringResource(id = R.string.button_previous))
             }
             Button(
-                onClick = { /*TODO*/ },
-                modifier = Modifier
+                onClick = onNextImage,
+                modifier = modifier
                     .weight(1.0f)
                     .padding(8.dp)
             ) {
                 Text(text = stringResource(id = R.string.button_next))
             }
         }
+
     }
+}
+
+
+@Composable
+fun ImageAnnotation(
+    @StringRes title: Int,
+    @StringRes author: Int,
+    @StringRes year: Int,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        horizontalAlignment = Alignment.Start,
+        modifier = modifier
+            .padding(8.dp)
+    ) {
+        Text(
+            text = stringResource(id = title),
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Light
+        )
+        Text(
+            text = buildAnnotatedString {
+                withStyle(
+                    style = SpanStyle(fontWeight = FontWeight.Bold)
+                ) {
+                    append(stringResource(id = author))
+                }
+                append(" (")
+                append(stringResource(id = year))
+                append(")")
+            },
+            fontSize = 12.sp,
+        )
+    }
+
 }
 
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
     ArtSpaceTheme {
-        ArtSpaceScreen()
+        ArtSpaceApp()
     }
 }

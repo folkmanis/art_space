@@ -2,7 +2,15 @@
     <string name="app_name">Art Space</string>
     <string name="button_previous">Previous</string>
     <string name="button_next">Next</string>
-    <string name="title_1">Somewhere at Lansarote. White building with blue doors ar windowshades</string>
+    <string name="previous_tooltip">Roll back to previous image</string>
+    <string name="next_tooltip">Advance to next image</string>
+    <string name="title_1">Somewhere at Lansarote. White building with blue doors and windowshades</string>
     <string name="author_1">Some Photographer</string>
     <string name="year_1">2023</string>
+    <string name="title_2">Charco de los Clicos</string>
+    <string name="author_2">Unknown Photographer</string>
+    <string name="year_2">2023</string>
+    <string name="title_3">Salinas de Janubio</string>
+    <string name="author_3">Some Tourist</string>
+    <string name="year_3">2023</string>
 </resources>
